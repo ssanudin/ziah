@@ -85,7 +85,8 @@ section.bank-info {
 }
 
 footer {
-  & .copyright a {
+  & .copyright a,
+  & .view-source a {
     color: rgb(130, 130, 130);
     text-decoration: none;
   }
