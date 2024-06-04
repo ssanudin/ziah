@@ -24,11 +24,12 @@ section.hero {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
 
   & > .overlay {
     background: rgba(0, 0, 0, 0.5);
+    min-height: 100vh;
   }
 }
 
