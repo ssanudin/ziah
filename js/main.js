@@ -81,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault();
 
       const name = event.target.name.value;
-      const message = event.target.message.value;
-      const body = JSON.stringify({ name, message });
+      const msg = event.target.message.value;
+      const body = JSON.stringify({ name, msg });
 
       if (name === "" || message === "") return;
 
@@ -99,6 +99,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (resData.message === "error") {
       } else {
+        event.target.name.value = "";
+        event.target.message.value = "";
+
         const toastMsg = document.getElementById("toastSendMsg");
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
         toastBootstrap.show();
