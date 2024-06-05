@@ -1,32 +1,77 @@
+// Update the countdown every second
+const updateCountdown = (targetDate) => {
+  const now = new Date().getTime();
+  const distance = targetDate - now;
+
+  if (distance < 0) {
+    document.getElementById("countdown-timer").classList.add("d-none");
+  } else {
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").innerHTML = days;
+    document.getElementById("hours").innerHTML = hours;
+    document.getElementById("minutes").innerHTML = minutes;
+    document.getElementById("seconds").innerHTML = seconds;
+  }
+};
+
+// Copy to Clipboard
+const copyToClipboard = (textToCopy, _this) => {
+  navigator.clipboard
+    .writeText(textToCopy)
+    .then(() => {
+      console.log("Text copied to clipboard!", textToCopy);
+      _this.classList.add("btn-success");
+      _this.classList.remove("btn-warning");
+      setTimeout(function () {
+        _this.classList.add("btn-warning");
+        _this.classList.remove("btn-success");
+      }, 1500);
+    })
+    .catch((error) => {
+      console.error("Error copying text:", error);
+    });
+};
+
+// Go To Top
+const scrollFunction = (goToTopEl) => {
+  if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
+    goToTopEl.style.display = "block";
+  } else {
+    goToTopEl.style.display = "none";
+  }
+};
+
+// Showing Toast
+const showToast = (type) => {
+  if (type === "error") {
+    const toastMsg = document.getElementById("toastError");
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
+    toastBootstrap.show();
+  } else if ("success-msg") {
+    const toastMsg = document.getElementById("toastSendMsg");
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
+    toastBootstrap.show();
+  }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
   // Set the target date and time (change this to your desired date)
-  const targetDate = new Date("June 8, 2024 11:00:00").getTime();
-
-  // Update the countdown every second
-  const updateCountdown = () => {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if (distance < 0) {
-      document.getElementById("countdown").innerHTML = "EXPIRED";
-    } else {
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("days").innerHTML = days;
-      document.getElementById("hours").innerHTML = hours;
-      document.getElementById("minutes").innerHTML = minutes;
-      document.getElementById("seconds").innerHTML = seconds;
-    }
-  };
+  const weddingTime = new Date("June 8, 2024 11:00:00").getTime();
 
   // Initial call to update countdown
-  updateCountdown();
+  updateCountdown(weddingTime);
+  // Update every second
+  setInterval(() => {
+    updateCountdown(weddingTime);
+  }, 1000);
 
+  // Activate Tooltips
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'
   );
@@ -34,72 +79,41 @@ document.addEventListener("DOMContentLoaded", function () {
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
   );
 
-  // Update every second
-  setInterval(updateCountdown, 1000);
-
+  // Add listener to Copy button
   document.querySelectorAll(".copy").forEach(function (element) {
     element.addEventListener("click", function (e) {
       copyToClipboard(this.dataset.no, this);
     });
   });
-  // Copy to Clipboard
-  function copyToClipboard(textToCopy, _this) {
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        console.log("Text copied to clipboard!", textToCopy);
-        _this.classList.add("btn-success");
-        _this.classList.remove("btn-warning");
-        setTimeout(function () {
-          _this.classList.add("btn-warning");
-          _this.classList.remove("btn-success");
-        }, 1500);
-      })
-      .catch((error) => {
-        console.error("Error copying text:", error);
-      });
-  }
 
-  // Go To Top Button
+  // Go to top button
   const goToTop = document.getElementById("go-to-top");
   window.onscroll = function () {
-    scrollFunction();
+    scrollFunction(goToTop);
   };
-
-  function scrollFunction() {
-    if (
-      document.body.scrollTop > 70 ||
-      document.documentElement.scrollTop > 70
-    ) {
-      goToTop.style.display = "block";
-    } else {
-      goToTop.style.display = "none";
-    }
-  }
-
   goToTop.addEventListener("click", function (e) {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   });
 
+  // Send message listener
+  const sendMsgBtn = document.getElementById("btn-send-message");
+  const sendMsgBtnSpinner = document.getElementById("btn-send-message-loading");
   document
     .getElementById("form-send-message")
     .addEventListener("submit", async function (event) {
       event.preventDefault();
-      document
-        .getElementById("btn-send-message-loading")
-        .classList.remove("d-none");
-      document.getElementById("btn-send-message").classList.add("d-none");
+
+      sendMsgBtnSpinner.classList.remove("d-none");
+      sendMsgBtn.classList.add("d-none");
 
       const name = event.target.name.value;
       const msg = event.target.message.value;
       const body = JSON.stringify({ name, msg });
 
       if (name === "" || message === "") {
-        document
-          .getElementById("btn-send-message-loading")
-          .classList.add("d-none");
-        document.getElementById("btn-send-message").classList.remove("d-none");
+        sendMsgBtnSpinner.classList.add("d-none");
+        sendMsgBtn.classList.remove("d-none");
 
         showToast("error");
 
@@ -130,21 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showToast("error");
       }
 
-      document
-        .getElementById("btn-send-message-loading")
-        .classList.add("d-none");
-      document.getElementById("btn-send-message").classList.remove("d-none");
+      sendMsgBtnSpinner.classList.add("d-none");
+      sendMsgBtn.classList.remove("d-none");
     });
 });
-
-function showToast(type) {
-  if (type === "error") {
-    const toastMsg = document.getElementById("toastError");
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
-    toastBootstrap.show();
-  } else if ("success-msg") {
-    const toastMsg = document.getElementById("toastSendMsg");
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
-    toastBootstrap.show();
-  }
-}
