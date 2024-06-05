@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (urlParams.has("to")) {
     const toName = urlParams.get("to");
     document.getElementById("to-name").textContent = toName;
-    document.querySelector("section.to").classList.remove("d-none");
+    document.querySelector(".to-wrapper").classList.remove("d-none");
   }
 
   // Activate Tooltips
@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Go to top button
   const goToTop = document.getElementById("go-to-top");
+  scrollFunction(goToTop);
   window.onscroll = function () {
     scrollFunction(goToTop);
   };

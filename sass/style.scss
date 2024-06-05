@@ -24,6 +24,10 @@ body {
   background: #fff;
 }
 
+nav {
+  z-index: 89;
+}
+
 .title {
   font-family: $font-secondary;
 }
@@ -364,6 +368,8 @@ section.bank-info {
 }
 
 footer {
+  padding-bottom: 9rem;
+
   & .copyright a,
   & .view-source a {
     color: rgb(130, 130, 130);
