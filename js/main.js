@@ -74,4 +74,34 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   });
+
+  document
+    .getElementById("form-send-message")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const name = event.target.name.value;
+      const message = event.target.message.value;
+      const body = JSON.stringify({ name, message });
+
+      if (name === "" || message === "") return;
+
+      const response = await fetch("https://notion.sanud.in/wedding-msg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      });
+
+      const resData = await response.json();
+      console.log("response", resData, body);
+
+      if (resData.message === "error") {
+      } else {
+        const toastMsg = document.getElementById("toastSendMsg");
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
+        toastBootstrap.show();
+      }
+    });
 });
