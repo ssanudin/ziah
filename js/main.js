@@ -71,6 +71,14 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCountdown(weddingTime);
   }, 1000);
 
+  // Get name receiver
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("to")) {
+    const toName = urlParams.get("to");
+    document.getElementById("to-name").textContent = toName;
+    document.querySelector("section.to").classList.remove("d-none");
+  }
+
   // Activate Tooltips
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'

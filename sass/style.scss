@@ -1,13 +1,15 @@
 $font-primary: "Sofia Sans Condensed", Arial, sans-serif;
 $font-secondary: "Engagement", Arial, serif;
 
-@mixin tablet-ls {
+// media breakpoints
+// < large
+@mixin media-lg-b {
   @media only screen and (max-width: 991px) {
     @content;
   }
 }
-
-@mixin tablet {
+// < medium
+@mixin media-md-b {
   @media only screen and (max-width: 767px) {
     @content;
   }
@@ -59,7 +61,7 @@ section.our-story {
       left: 0;
       right: 0;
 
-      @include tablet {
+      @include media-md-b {
         margin: 0;
         left: 7px;
       }
@@ -69,7 +71,7 @@ section.our-story {
       margin-bottom: 40px;
       position: relative;
 
-      @include tablet {
+      @include media-md-b {
         margin-bottom: 20px;
       }
 
@@ -112,14 +114,14 @@ section.our-story {
           padding: 20px 50px 20px 0;
           text-align: right;
 
-          @include tablet-ls {
+          @include media-lg-b {
             padding: 10px 30px 10px 0;
           }
         }
       }
 
       &:last-child {
-        @include tablet {
+        @include media-md-b {
           margin-bottom: 0;
         }
       }
@@ -136,7 +138,7 @@ section.our-story {
       bottom: 0;
       right: 0;
 
-      @include tablet {
+      @include media-md-b {
         margin: auto 0;
       }
 
@@ -158,7 +160,7 @@ section.our-story {
         left: -3px;
       }
 
-      :after {
+      &:after {
         border: 2px solid #c6c6c6;
         left: 3px;
       }
@@ -170,11 +172,11 @@ section.our-story {
       margin-top: 22px;
       position: relative;
 
-      @include tablet-ls {
+      @include media-lg-b {
         margin-top: 35px;
       }
 
-      @include tablet {
+      @include media-md-b {
         width: 95%;
         float: right;
         margin-top: 0;
@@ -191,11 +193,11 @@ section.our-story {
         right: 10px;
         bottom: 0;
 
-        @include tablet-ls {
+        @include media-lg-b {
           width: 22.5%;
         }
 
-        @include tablet() {
+        @include media-md-b() {
           display: none;
         }
       }
@@ -209,7 +211,7 @@ section.our-story {
       margin: auto;
       z-index: 1;
 
-      @include tablet {
+      @include media-md-b {
         width: 110px;
         height: 110px;
       }
@@ -227,7 +229,7 @@ section.our-story {
         right: 0;
         transition: all 0.33s ease-out 0s;
 
-        @include tablet {
+        @include media-md-b {
           width: 110px;
           height: 110px;
         }
@@ -252,7 +254,7 @@ section.our-story {
       top: 27%;
       left: 0;
 
-      @include tablet {
+      @include media-md-b {
         top: 30%;
       }
     }
@@ -269,7 +271,7 @@ section.our-story {
       color: #232323;
       line-height: 36px;
 
-      @include tablet {
+      @include media-md-b {
         font-size: 24px;
       }
     }
@@ -279,7 +281,7 @@ section.our-story {
       padding: 20px 0 20px 50px;
       float: right;
 
-      @include tablet-ls {
+      @include media-lg-b {
         padding: 10px 0 10px 30px;
       }
     }
@@ -295,7 +297,7 @@ section.our-story {
 
     & .timeline-content,
     & .timeline:nth-child(2n) .timeline-content {
-      @include tablet {
+      @include media-md-b {
         width: 95%;
         text-align: center;
         padding: 10px 0;
@@ -347,6 +349,10 @@ section.send-message {
 section.bank-info {
   & .card-wrapper {
     max-width: 385px;
+  }
+
+  & .card-image {
+    height: 125px;
   }
 }
 
