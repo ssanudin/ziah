@@ -79,32 +79,65 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("form-send-message")
     .addEventListener("submit", async function (event) {
       event.preventDefault();
+      document
+        .getElementById("btn-send-message-loading")
+        .classList.remove("d-none");
+      document.getElementById("btn-send-message").classList.add("d-none");
 
       const name = event.target.name.value;
       const msg = event.target.message.value;
       const body = JSON.stringify({ name, msg });
 
-      if (name === "" || message === "") return;
+      if (name === "" || message === "") {
+        document
+          .getElementById("btn-send-message-loading")
+          .classList.add("d-none");
+        document.getElementById("btn-send-message").classList.remove("d-none");
 
-      const response = await fetch("https://notion.sanud.in/wedding-msg", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
-      });
+        showToast("error");
 
-      const resData = await response.json();
-      console.log("response", resData, body);
-
-      if (resData.message === "error") {
-      } else {
-        event.target.name.value = "";
-        event.target.message.value = "";
-
-        const toastMsg = document.getElementById("toastSendMsg");
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
-        toastBootstrap.show();
+        return;
       }
+
+      try {
+        const response = await fetch("https://notion.sanud.in/wedding-msg", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body,
+        });
+
+        const resData = await response.json();
+        console.log("response", resData, body);
+
+        if (resData.message === "error") {
+          showToast("error");
+        } else {
+          event.target.name.value = "";
+          event.target.message.value = "";
+
+          showToast("success-msg");
+        }
+      } catch (error) {
+        showToast("error");
+      }
+
+      document
+        .getElementById("btn-send-message-loading")
+        .classList.add("d-none");
+      document.getElementById("btn-send-message").classList.remove("d-none");
     });
 });
+
+function showToast(type) {
+  if (type === "error") {
+    const toastMsg = document.getElementById("toastError");
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
+    toastBootstrap.show();
+  } else if ("success-msg") {
+    const toastMsg = document.getElementById("toastSendMsg");
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastMsg);
+    toastBootstrap.show();
+  }
+}
