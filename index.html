@@ -48,7 +48,15 @@
     />
     <link rel="stylesheet" href="css/style.min.css" />
   </head>
-  <body>
+  <body class="overflow-hidden">
+    <div class="spinner-wrapper position-fixed">
+      <div
+        class="d-flex justify-content-center align-items-center flex-column w-100 h-100"
+      >
+        <div class="spinner-border text-info"></div>
+        <strong role="status">Loading...</strong>
+      </div>
+    </div>
     <nav class="navigation">
       <!-- Navigation menu links -->
     </nav>

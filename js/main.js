@@ -155,4 +155,13 @@ document.addEventListener("DOMContentLoaded", function () {
       sendMsgBtnSpinner.classList.add("d-none");
       sendMsgBtn.classList.remove("d-none");
     });
+
+  console.log("dom loaded");
+});
+
+window.addEventListener("load", function () {
+  console.log("loaded");
+
+  document.querySelector("body").classList.remove("overflow-hidden");
+  document.querySelector(".spinner-wrapper").classList.add("d-none");
 });

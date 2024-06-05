@@ -28,6 +28,13 @@ body {
   font-family: $font-secondary;
 }
 
+.spinner-wrapper {
+  width: 100%;
+  height: 100vh;
+  z-index: 999;
+  background: #fff;
+}
+
 section.hero {
   background-image: url("../images/alvin-mahmudov-9_XfcBxf_uo-unsplash.jpg");
   background-position: center;
