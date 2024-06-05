@@ -27,6 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial call to update countdown
   updateCountdown();
 
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+  );
+  const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+  );
+
   // Update every second
   setInterval(updateCountdown, 1000);
 
