@@ -25,7 +25,6 @@ const copyToClipboard = (textToCopy, _this) => {
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
-      console.log("Text copied to clipboard!", textToCopy);
       _this.classList.add("btn-success");
       _this.classList.remove("btn-warning");
       setTimeout(function () {
@@ -34,7 +33,7 @@ const copyToClipboard = (textToCopy, _this) => {
       }, 1500);
     })
     .catch((error) => {
-      console.error("Error copying text:", error);
+      showToast("error");
     });
 };
 
@@ -60,7 +59,57 @@ const showToast = (type) => {
   }
 };
 
+const showMsg = (messages, filter = "") => {
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  if (filter) {
+    messages = messages.filter((msg) => {
+      return msg["Name"].toLowerCase().includes(filter);
+    });
+  }
+
+  let msgs = "";
+  messages.forEach((msg) => {
+    const datetime = new Date(msg["Created time"]);
+    msgs += `<div class="bg-body-tertiary border rounded-3 p-3 m-3">
+          <figure class="text-center">
+            <blockquote class="blockquote">
+              <p>${msg["Message"]}</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+              ${msg["Name"]}
+              (<cite title="Source Title">${datetime.getDate()} ${
+      months[datetime.getMonth()]
+    } ${datetime.getFullYear()} ${datetime.getHours()}:${datetime.getMinutes()}</cite>)
+            </figcaption>
+          </figure>
+        </div>`;
+  });
+
+  if (msgs === "") {
+    msgs = `<p class="text-center">Belum ada ucapan selamat${
+      filter ? " dari " + filter : ""
+    } 🥺</p>`;
+  }
+
+  document.querySelector("#messages .modal-body").innerHTML = msgs;
+};
+
 document.addEventListener("DOMContentLoaded", function () {
+  const localServer = "http://localhost:1001/";
+  const apiServer = "https://notion.sanud.in/";
   // Set the target date and time (change this to your desired date)
   const weddingTime = new Date("June 8, 2024 11:00:00").getTime();
 
@@ -130,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const response = await fetch("https://notion.sanud.in/wedding-msg", {
+        const response = await fetch(apiServer + "wedding-msg", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -139,7 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const resData = await response.json();
-        console.log("response", resData, body);
 
         if (resData.message === "error") {
           showToast("error");
@@ -155,6 +203,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
       sendMsgBtnSpinner.classList.add("d-none");
       sendMsgBtn.classList.remove("d-none");
+    });
+
+  const seeMsgBtn = document.getElementById("btn-see-message");
+  const seeMsgBtnSpinner = document.getElementById("btn-see-message-loading");
+  let dataMsgs = [];
+  seeMsgBtn.addEventListener("click", async function (event) {
+    seeMsgBtnSpinner.classList.remove("d-none");
+    seeMsgBtn.classList.add("d-none");
+
+    JSON.stringify({ name: "ziah-sanudin" });
+
+    try {
+      const response = await fetch(apiServer + "get-wedding-msg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const resData = await response.json();
+
+      if (resData.message === "error") {
+        showToast("error");
+      } else {
+        dataMsgs = resData.data;
+
+        showMsg(dataMsgs);
+        document.getElementById("filter-name").value = "";
+        new bootstrap.Modal(document.getElementById("messages")).show();
+      }
+    } catch (error) {
+      showToast("error");
+    }
+
+    seeMsgBtnSpinner.classList.add("d-none");
+    seeMsgBtn.classList.remove("d-none");
+  });
+
+  document
+    .getElementById("btn-see-message-filter")
+    .addEventListener("click", function () {
+      const name = document.getElementById("filter-name").value;
+
+      if (name) {
+        showMsg(dataMsgs, name);
+      } else {
+        showMsg(dataMsgs, name);
+      }
     });
 
   console.log("dom loaded");
