@@ -108,7 +108,7 @@ const showMsg = (messages, filter = "") => {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  const localServer = "http://localhost:1001/";
+  // const apiServer = "http://localhost:3000/"; // local development
   const apiServer = "https://notion-ziahsanudin.netlify.app/";
   // Set the target date and time (change this to your desired date)
   const weddingTime = new Date("June 8, 2024 11:00:00").getTime();
